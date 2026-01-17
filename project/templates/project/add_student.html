@@ -1,0 +1,1189 @@
+<!-- templates/students/add_student.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Student</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --light: #f9fafb;
+            --dark: #111827;
+            --border: #d1d5db;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Header */
+        .form-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .form-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .form-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        /* Content */
+        .form-content {
+            padding: 30px;
+        }
+        
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step-label {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--secondary);
+            text-align: center;
+        }
+        
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+        
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 24px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+        }
+        
+        .form-label .required {
+            color: var(--danger);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .form-control.error {
+            border-color: var(--danger);
+        }
+        
+        .form-control.success {
+            border-color: var(--success);
+        }
+        
+        .form-help {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--secondary);
+        }
+        
+        .error-message {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--danger);
+            animation: shake 0.3s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Matric Type Cards */
+        .matric-type-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 480px) {
+            .matric-type-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .matric-type-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+        
+        .matric-type-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .matric-type-card.selected {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+        
+        .matric-type-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .matric-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .single-icon { color: var(--warning); }
+        .double-icon { color: var(--primary); }
+        
+        .matric-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        .matric-desc {
+            font-size: 12px;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+        
+        /* Matric Fields Container */
+        .matric-fields-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .matric-fields-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .matric-field-group {
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--light);
+            transition: all 0.3s ease;
+        }
+        
+        .matric-field-group.disabled {
+            opacity: 0.5;
+            background: #f5f5f5;
+        }
+        
+        .matric-field-group h4 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .matric-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .required-badge {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .optional-badge {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        /* Buttons */
+        .form-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Loading State */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--success));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .success-icon {
+            font-size: 48px;
+            color: var(--success);
+            margin-bottom: 20px;
+            animation: bounce 1s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        
+        /* Floating Labels */
+        .floating-label {
+            position: relative;
+        }
+        
+        .floating-label .form-label {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            background: white;
+            padding: 0 8px;
+            font-size: 12px;
+            color: var(--secondary);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .floating-label .form-control:focus + .form-label,
+        .floating-label .form-control:not(:placeholder-shown) + .form-label {
+            top: -10px;
+            font-size: 11px;
+            color: var(--primary);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .form-header {
+                padding: 20px;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+            
+            .form-header h1 {
+                font-size: 20px;
+            }
+            
+            .step-label {
+                font-size: 10px;
+            }
+            
+            .step-circle {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .step-line {
+                top: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        /* Form Sections Animation */
+        .form-section {
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+<!-- templates/students/add_student.html -->
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <!-- Header -->
+            <div class="form-header">
+                <h1>🎓 Student Registration</h1>
+                <p>Enter your details and matric number(s)</p>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 33%"></div>
+            </div>
+            
+            <!-- Django Messages -->
+            {% if messages %}
+            <div class="form-content">
+                <div class="alert-messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Django Form (hidden, will be submitted via AJAX) -->
+            <form method="post" id="djangoForm" style="display: none;">
+                {% csrf_token %}
+                {{ form.matric_type }}
+                <input type="hidden" name="name" id="djangoName">
+                <input type="hidden" name="old_matric" id="djangoOldMatric">
+                <input type="hidden" name="new_matric" id="djangoNewMatric">
+            </form>
+            
+            <!-- Form Content -->
+            <div class="form-content">
+                <!-- Step 1: Personal Info -->
+                <div class="form-section" id="personalSection">
+                    <div class="form-group">
+                        <div class="floating-label">
+                            <input type="text" 
+                                   id="studentName" 
+                                   class="form-control" 
+                                   placeholder=" "
+                                   maxlength="100"
+                                   value="{% if form.name.value %}{{ form.name.value }}{% endif %}">
+                            <label for="studentName" class="form-label">Full Name <span class="required">*</span></label>
+                        </div>
+                        <div class="error-message" id="nameError">
+                            {% if form.name.errors %}
+                                {{ form.name.errors.0 }}
+                            {% endif %}
+                        </div>
+                        <span class="form-help">Enter your full name as registered</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+                            Next: Matric Type
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Matric Type -->
+                <div class="form-section" id="matricTypeSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">How many matric numbers do you have? <span class="required">*</span></label>
+                        
+                        <div class="matric-type-group">
+                            <!-- Single Matric Card -->
+                            <div class="matric-type-card" onclick="selectMatricType('single')" id="singleCard">
+                                <div class="matric-icon single-icon">📌</div>
+                                <div class="matric-title">Single Matric</div>
+                                <div class="matric-desc">I have only ONE matric number</div>
+                            </div>
+                            
+                            <!-- Double Matric Card -->
+                            <div class="matric-type-card" onclick="selectMatricType('double')" id="doubleCard">
+                                <div class="matric-icon double-icon">🔢</div>
+                                <div class="matric-title">Double Matric</div>
+                                <div class="matric-desc">I have TWO matric numbers (old & new)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="error-message" id="matricTypeError">
+                            {% if form.matric_type.errors %}
+                                {{ form.matric_type.errors.0 }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+                            Next: Enter Matric
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Matric Numbers -->
+                <div class="form-section" id="matricSection" style="display: none;">
+                    <div class="matric-fields-container">
+                        <!-- Old Matric Field -->
+                        <div class="matric-field-group">
+                            <h4>
+                                <span>🏷️</span>
+                                Old Matric
+                                <span class="matric-badge required-badge">Required</span>
+                            </h4>
+                            
+                            <div class="form-group">
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           id="oldMatric" 
+                                           class="form-control" 
+                                           placeholder=" "
+                                           maxlength="20"
+                                           oninput="formatMatric(this)"
+                                           value="{% if form.old_matric.value %}{{ form.old_matric.value }}{% endif %}">
+                                    <label for="oldMatric" class="form-label">Old Matric Number</label>
+                                </div>
+                                <div class="error-message" id="oldMatricError">
+                                    {% if form.old_matric.errors %}
+                                        {{ form.old_matric.errors.0 }}
+                                    {% endif %}
+                                </div>
+                                <span class="form-help">Your original matric num should start with 2024 or 2025 (e.g., 2024/2025)</span>
+                            </div>
+                        </div>
+                        
+                        <!-- New Matric Field -->
+                        <div class="matric-field-group disabled" id="newMatricGroup">
+                            <h4>
+                                <span>🆕</span>
+                                New Matric
+                                <span class="matric-badge optional-badge" id="newMatricBadge">Optional</span>
+                            </h4>
+                            
+                            <div class="form-group">
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           id="newMatric" 
+                                           class="form-control" 
+                                           placeholder=" "
+                                           maxlength="20"
+                                           oninput="formatMatric(this)"
+                                           disabled
+                                           value="{% if form.new_matric.value %}{{ form.new_matric.value }}{% endif %}">
+                                    <label for="newMatric" class="form-label">New Matric Number</label>
+                                </div>
+                                <div class="error-message" id="newMatricError">
+                                    {% if form.new_matric.errors %}
+                                        {{ form.new_matric.errors.0 }}
+                                    {% endif %}
+                                </div>
+                                <span class="form-help">Only if you have two matric numbers</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">
+                            ← Back
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="submitForm()" id="submitBtn">
+                            ✅ Submit Registration
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Success Message -->
+                <div class="form-section" id="successSection" style="display: none;">
+                    <div class="success-message">
+                        <div class="success-icon">✓</div>
+                        <h2>Registration Successful!</h2>
+                        <p id="successDetails"></p>
+                        <div class="form-buttons" style="border-top: none; margin-top: 30px;">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                ← Register Another Student
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-primary">
+                                View All Students →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Server Error Message -->
+                {% if form.non_field_errors %}
+                <div class="form-section">
+                    <div class="error-message" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                        <strong>Error:</strong>
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript with Django integration -->
+    <script>
+        // CSRF Token for AJAX requests
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        // State management
+        let currentStep = 1;
+        let selectedMatricType = 'single';
+        let formData = {
+            name: '',
+            matricType: 'single',
+            oldMatric: '',
+            newMatric: ''
+        };
+
+        // DOM Elements
+        const sections = {
+            personal: document.getElementById('personalSection'),
+            matricType: document.getElementById('matricTypeSection'),
+            matric: document.getElementById('matricSection'),
+            success: document.getElementById('successSection')
+        };
+
+        const inputs = {
+            name: document.getElementById('studentName'),
+            oldMatric: document.getElementById('oldMatric'),
+            newMatric: document.getElementById('newMatric'),
+            djangoName: document.getElementById('djangoName'),
+            djangoOldMatric: document.getElementById('djangoOldMatric'),
+            djangoNewMatric: document.getElementById('djangoNewMatric'),
+            matricTypeField: document.getElementById('id_matric_type')
+        };
+
+        const errors = {
+            name: document.getElementById('nameError'),
+            matricType: document.getElementById('matricTypeError'),
+            oldMatric: document.getElementById('oldMatricError'),
+            newMatric: document.getElementById('newMatricError')
+        };
+
+        const cards = {
+            single: document.getElementById('singleCard'),
+            double: document.getElementById('doubleCard')
+        };
+
+        const newMatricGroup = document.getElementById('newMatricGroup');
+        const newMatricBadge = document.getElementById('newMatricBadge');
+        const progressFill = document.getElementById('progressFill');
+        const submitBtn = document.getElementById('submitBtn');
+        const djangoForm = document.getElementById('djangoForm');
+
+        // Initialize form if there are existing errors (form validation failed)
+        {% if form.errors %}
+        document.addEventListener('DOMContentLoaded', function() {
+            // If there are errors, show the appropriate section
+            const hasNameError = "{{ form.name.errors }}" !== "";
+            const hasOldMatricError = "{{ form.old_matric.errors }}" !== "";
+            const hasNewMatricError = "{{ form.new_matric.errors }}" !== "";
+            const hasMatricTypeError = "{{ form.matric_type.errors }}" !== "";
+            
+            if (hasOldMatricError || hasNewMatricError) {
+                // Show matric section
+                sections.personal.style.display = 'none';
+                sections.matricType.style.display = 'none';
+                sections.matric.style.display = 'block';
+                currentStep = 3;
+                updateProgress();
+                
+                // Set matric type based on new_matric value
+                const newMatricValue = "{{ form.new_matric.value|default:'' }}";
+                if (newMatricValue) {
+                    selectMatricType('double');
+                } else {
+                    selectMatricType('single');
+                }
+            } else if (hasMatricTypeError) {
+                // Show matric type section
+                sections.personal.style.display = 'none';
+                sections.matricType.style.display = 'block';
+                sections.matric.style.display = 'none';
+                currentStep = 2;
+                updateProgress();
+            }
+        });
+        {% endif %}
+
+        // Step Navigation
+        function nextStep(step) {
+            if (!validateStep(step)) return;
+            
+            // Hide current section
+            sections[Object.keys(sections)[step - 1]].style.display = 'none';
+            
+            // Show next section
+            sections[Object.keys(sections)[step]].style.display = 'block';
+            
+            // Update progress
+            currentStep = step + 1;
+            updateProgress();
+            
+            // Focus on first input of next section
+            if (step === 2) {
+                // Coming from matric type to matric numbers
+                if (selectedMatricType === 'double') {
+                    inputs.newMatric.disabled = false;
+                    newMatricGroup.classList.remove('disabled');
+                    newMatricBadge.textContent = 'Required';
+                    newMatricBadge.className = 'matric-badge required-badge';
+                }
+                inputs.oldMatric.focus();
+            }
+        }
+
+        function prevStep(step) {
+            // Hide current section
+            sections[Object.keys(sections)[step - 1]].style.display = 'none';
+            
+            // Show previous section
+            sections[Object.keys(sections)[step - 2]].style.display = 'block';
+            
+            // Update progress
+            currentStep = step - 1;
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (currentStep / 3) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        // Step Validation
+        function validateStep(step) {
+            let isValid = true;
+            
+            // Clear previous errors
+            Object.values(errors).forEach(error => error.textContent = '');
+            Object.values(inputs).forEach(input => {
+                if (input.classList) {
+                    input.classList.remove('error', 'success');
+                }
+            });
+            
+            // Validate based on step
+            if (step === 1) {
+                // Validate name
+                if (!inputs.name.value.trim()) {
+                    errors.name.textContent = 'Please enter your name';
+                    inputs.name.classList.add('error');
+                    isValid = false;
+                } else if (inputs.name.value.trim().length < 2) {
+                    errors.name.textContent = 'Name must be at least 2 characters';
+                    inputs.name.classList.add('error');
+                    isValid = false;
+                } else {
+                    formData.name = inputs.name.value.trim();
+                    inputs.name.classList.add('success');
+                }
+            } else if (step === 2) {
+                // Validate matric type selection
+                if (!selectedMatricType) {
+                    errors.matricType.textContent = 'Please select matric type';
+                    isValid = false;
+                } else {
+                    formData.matricType = selectedMatricType;
+                    inputs.matricTypeField.value = selectedMatricType;
+                }
+            }
+            
+            return isValid;
+        }
+
+        // Matric Type Selection
+        function selectMatricType(type) {
+            selectedMatricType = type;
+            formData.matricType = type;
+            inputs.matricTypeField.value = type;
+            
+            // Update card styles
+            cards.single.classList.remove('selected');
+            cards.double.classList.remove('selected');
+            cards[type].classList.add('selected');
+            
+            // Clear error
+            errors.matricType.textContent = '';
+        }
+
+        // Format Matric Number
+        function formatMatric(input) {
+            // Remove any non-numeric characters
+            let value = input.value.replace(/[^0-9]/g, '');
+            
+            input.value = value;
+            
+            // Validate format
+            validateMatric(input);
+            
+            // Save to form data
+            if (input.id === 'oldMatric') {
+                formData.oldMatric = value;
+            } else {
+                formData.newMatric = value;
+            }
+        }
+
+        // Validate Matric Number
+        function validateMatric(input) {
+            const value = input.value;
+            const errorElement = document.getElementById(`${input.id}Error`);
+            
+            // Clear previous state
+            input.classList.remove('error', 'success');
+            errorElement.textContent = '';
+            
+            if (!value) {
+                if (input.id === 'oldMatric') {
+                    input.classList.add('error');
+                    errorElement.textContent = 'Old matric number is required';
+                }
+                return false;
+            }
+            
+            if (value.length < 10) {
+                input.classList.add('error');
+                errorElement.textContent = 'Matric number must be at least 10 digits';
+                return false;
+            }
+            
+            if (!value.startsWith('2024') && !value.startsWith('2025')) {
+                input.classList.add('error');
+                errorElement.textContent = 'Matric number must start with 2024 or 2025';
+                return false;
+            }
+            
+            // Check if matric number exists via AJAX
+            checkMatricAvailability(value, input.id === 'oldMatric' ? 'old' : 'new');
+            
+            // All good (temporarily)
+            input.classList.add('success');
+            return true;
+        }
+
+        // Check Matric Availability via AJAX
+        function checkMatricAvailability(matricNumber, matricType) {
+            if (!matricNumber || matricNumber.length < 10) return;
+            
+            fetch('/check-matric/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    matric_number: matricNumber,
+                    matric_type: matricType
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const input = matricType === 'old' ? inputs.oldMatric : inputs.newMatric;
+                const errorElement = document.getElementById(`${input.id}Error`);
+                
+                if (!data.available) {
+                    input.classList.remove('success');
+                    input.classList.add('error');
+                    errorElement.textContent = data.message;
+                } else {
+                    input.classList.remove('error');
+                    input.classList.add('success');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking matric:', error);
+            });
+        }
+
+        // Submit Form via AJAX
+        function submitForm() {
+            // Validate all fields
+            let isValid = true;
+            
+            // Validate old matric
+            if (!validateMatric(inputs.oldMatric)) isValid = false;
+            
+            // Validate new matric if double type
+            if (selectedMatricType === 'double') {
+                if (!validateMatric(inputs.newMatric)) isValid = false;
+                
+                // Check if both matric numbers are the same
+                if (inputs.oldMatric.value === inputs.newMatric.value) {
+                    errors.newMatric.textContent = 'Old and new matric cannot be the same';
+                    inputs.newMatric.classList.add('error');
+                    isValid = false;
+                }
+            }
+            
+            if (!isValid) {
+                // Show error animation
+                submitBtn.innerHTML = '❌ Fix Errors';
+                submitBtn.style.background = 'var(--danger)';
+                setTimeout(() => {
+                    submitBtn.innerHTML = '✅ Submit Registration';
+                    submitBtn.style.background = '';
+                }, 2000);
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.innerHTML = '<span class="btn-loading"></span>';
+            submitBtn.disabled = true;
+            
+            // Prepare form data for Django
+            inputs.djangoName.value = formData.name;
+            inputs.djangoOldMatric.value = formData.oldMatric;
+            inputs.djangoNewMatric.value = selectedMatricType === 'double' ? formData.newMatric : '';
+            inputs.matricTypeField.value = selectedMatricType;
+            
+            // Submit via AJAX
+            const formDataObj = new FormData(djangoForm);
+            
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrftoken
+                },
+                body: formDataObj
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success section
+                    sections.matric.style.display = 'none';
+                    sections.success.style.display = 'block';
+                    
+                    // Update progress
+                    currentStep = 4;
+                    updateProgress();
+                    
+                    // Show success details
+                    const details = `
+                        <strong>Name:</strong> ${data.student.name}<br>
+                        <strong>Old Matric:</strong> ${data.student.old_matric}<br>
+                        ${data.student.new_matric ? `<strong>New Matric:</strong> ${data.student.new_matric}<br>` : ''}
+                        <strong>Type:</strong> ${data.student.matric_type === 'double' ? 'Double Matric' : 'Single Matric'}
+                    `;
+                    document.getElementById('successDetails').innerHTML = details;
+                } else {
+                    // Show errors
+                    Object.keys(data.errors).forEach(field => {
+                        const errorElement = document.getElementById(`${field}Error`);
+                        const inputElement = document.getElementById(field);
+                        
+                        if (errorElement && inputElement) {
+                            errorElement.textContent = data.errors[field];
+                            inputElement.classList.add('error');
+                        }
+                    });
+                    
+                    // Show general error message
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                // Reset submit button
+                submitBtn.innerHTML = '✅ Submit Registration';
+                submitBtn.disabled = false;
+            });
+        }
+
+        // Reset Form
+        function resetForm() {
+            // Reset all fields
+            Object.values(inputs).forEach(input => {
+                if (input.type !== 'hidden') {
+                    input.value = '';
+                    if (input.classList) {
+                        input.classList.remove('error', 'success');
+                    }
+                }
+            });
+            
+            // Reset state
+            currentStep = 1;
+            selectedMatricType = 'single';
+            formData = { name: '', matricType: 'single', oldMatric: '', newMatric: '' };
+            
+            // Reset UI
+            cards.single.classList.remove('selected');
+            cards.double.classList.remove('selected');
+            newMatricGroup.classList.add('disabled');
+            inputs.newMatric.disabled = true;
+            newMatricBadge.textContent = 'Optional';
+            newMatricBadge.className = 'matric-badge optional-badge';
+            
+            // Reset errors
+            Object.values(errors).forEach(error => error.textContent = '');
+            
+            // Show first section
+            Object.values(sections).forEach(section => section.style.display = 'none');
+            sections.personal.style.display = 'block';
+            
+            // Reset progress
+            updateProgress();
+            
+            // Focus on name field
+            inputs.name.focus();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if there's pre-filled data (from failed submission)
+            if (inputs.oldMatric.value) {
+                validateMatric(inputs.oldMatric);
+            }
+            if (inputs.newMatric.value) {
+                validateMatric(inputs.newMatric);
+            }
+            
+            // Set initial matric type if new_matric has value
+            if (inputs.newMatric.value) {
+                selectMatricType('double');
+            }
+            
+            // Focus on name field if empty
+            if (!inputs.name.value) {
+                inputs.name.focus();
+            }
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (currentStep === 1) {
+                    nextStep(1);
+                } else if (currentStep === 2) {
+                    nextStep(2);
+                } else if (currentStep === 3) {
+                    submitForm();
+                }
+            } else if (e.key === 'Escape') {
+                if (currentStep > 1) {
+                    prevStep(currentStep);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

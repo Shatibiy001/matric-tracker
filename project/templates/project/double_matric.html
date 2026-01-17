@@ -1,0 +1,680 @@
+<!-- templates/students/double_matric.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Matric Students</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --danger: #ef476f;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fb;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-left p {
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Back Button */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background-color: var(--light);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid var(--light-gray);
+        }
+
+        .back-link:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Stats Card */
+        .stats-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stats-content h3 {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .count-badge {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background-color: rgba(67, 97, 238, 0.08);
+        }
+
+        td {
+            padding: 16px 15px;
+            color: var(--dark);
+        }
+
+        .old-matric {
+            color: var(--danger);
+            font-weight: 600;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .old-matric::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--danger);
+            font-size: 1.5rem;
+        }
+
+        .new-matric {
+            color: var(--success);
+            font-weight: 600;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .new-matric::before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--light-gray);
+        }
+
+        .empty-state h3 {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        /* Filters and Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .export-btn {
+            padding: 12px 20px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .export-btn:hover {
+            background-color: #05c08e;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 10px 16px;
+            background-color: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .page-btn:hover {
+            background-color: var(--light);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-left h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+            }
+
+            .stats-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-link {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-left h1 {
+                font-size: 1.3rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+
+            .old-matric, .new-matric {
+                padding-left: 20px;
+            }
+
+            .old-matric::before, .new-matric::before {
+                left: 5px;
+            }
+        }
+
+        /* Animation for new rows */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        tbody tr {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-id-card-alt"></i> Double Matric Students</h1>
+                <p>Students with both old and new matriculation numbers</p>
+            </div>
+            <a href="{% url 'home' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stats-content">
+                <h3>Total Students with Double Matric Numbers</h3>
+                <div class="count-badge">{{ students|length }}</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by name or matric number...">
+            </div>
+            <button class="export-btn" id="exportBtn">
+                <i class="fas fa-file-export"></i> Export as CSV
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student Name</th>
+                        <th>Old Matric</th>
+                        <th>New Matric</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.name }}</td>
+                        <td class="old-matric">{{ student.old_matric }}</td>
+                        <td class="new-matric">{{ student.new_matric }}</td>
+                        <td>{{ student.created_at|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr id="emptyRow">
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <h3>No double matric students found</h3>
+                                <p>All students have unique matriculation numbers</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be generated by JavaScript -->
+        </div>
+
+        <div class="footer">
+            <p>Double Matric Students Report • Generated on {% now "j F Y" %}</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const searchInput = document.getElementById('searchInput');
+            const tableBody = document.getElementById('tableBody');
+            const exportBtn = document.getElementById('exportBtn');
+            const pagination = document.getElementById('pagination');
+            
+            // Get all student rows (excluding empty state row)
+            const studentRows = Array.from(tableBody.querySelectorAll('tr')).filter(row => !row.id.includes('emptyRow'));
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            
+            // If there are no students, hide pagination and export button
+            if (studentRows.length === 0) {
+                pagination.style.display = 'none';
+                exportBtn.style.opacity = '0.5';
+                exportBtn.style.pointerEvents = 'none';
+            } else {
+                // Initialize pagination
+                setupPagination();
+                showPage(currentPage);
+            }
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                studentRows.forEach(row => {
+                    const name = row.cells[1].textContent.toLowerCase();
+                    const oldMatric = row.cells[2].textContent.toLowerCase();
+                    const newMatric = row.cells[3].textContent.toLowerCase();
+                    
+                    if (name.includes(searchTerm) || oldMatric.includes(searchTerm) || newMatric.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Update pagination after search
+                setupPagination();
+                currentPage = 1;
+                showPage(currentPage);
+            });
+            
+            // Export to CSV functionality
+            exportBtn.addEventListener('click', function() {
+                exportToCSV();
+            });
+            
+            // Pagination functions
+            function setupPagination() {
+                pagination.innerHTML = '';
+                
+                // Get visible rows after search
+                const visibleRows = studentRows.filter(row => row.style.display !== 'none');
+                const pageCount = Math.ceil(visibleRows.length / itemsPerPage);
+                
+                if (pageCount <= 1) {
+                    pagination.style.display = 'none';
+                    return;
+                }
+                
+                pagination.style.display = 'flex';
+                
+                // Previous button
+                const prevButton = document.createElement('button');
+                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevButton.className = 'page-btn';
+                prevButton.addEventListener('click', function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        showPage(currentPage);
+                    }
+                });
+                pagination.appendChild(prevButton);
+                
+                // Page buttons
+                for (let i = 1; i <= pageCount; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.textContent = i;
+                    pageButton.className = 'page-btn';
+                    if (i === currentPage) pageButton.classList.add('active');
+                    
+                    pageButton.addEventListener('click', function() {
+                        currentPage = i;
+                        showPage(currentPage);
+                    });
+                    
+                    pagination.appendChild(pageButton);
+                }
+                
+                // Next button
+                const nextButton = document.createElement('button');
+                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextButton.className = 'page-btn';
+                nextButton.addEventListener('click', function() {
+                    if (currentPage < pageCount) {
+                        currentPage++;
+                        showPage(currentPage);
+                    }
+                });
+                pagination.appendChild(nextButton);
+            }
+            
+            function showPage(page) {
+                // Get visible rows after search
+                const visibleRows = studentRows.filter(row => row.style.display !== 'none');
+                
+                // Hide all rows
+                studentRows.forEach(row => {
+                    row.style.display = 'none';
+                });
+                
+                // Calculate start and end index for current page
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                
+                // Show rows for current page
+                for (let i = startIndex; i < endIndex && i < visibleRows.length; i++) {
+                    visibleRows[i].style.display = '';
+                }
+                
+                // Update active page button
+                document.querySelectorAll('.page-btn').forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (btn.textContent == page) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            // Export to CSV function
+            function exportToCSV() {
+                // Get all visible student data
+                const rows = [];
+                const headers = ['#', 'Student Name', 'Old Matric', 'New Matric', 'Date Added'];
+                rows.push(headers.join(','));
+                
+                studentRows.forEach((row, index) => {
+                    if (row.style.display !== 'none') {
+                        const rowData = [
+                            index + 1,
+                            `"${row.cells[1].textContent}"`,
+                            row.cells[2].textContent,
+                            row.cells[3].textContent,
+                            row.cells[4].textContent
+                        ];
+                        rows.push(rowData.join(','));
+                    }
+                });
+                
+                // Create CSV content
+                const csvContent = rows.join('\n');
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', `double_matric_students_${new Date().toISOString().slice(0,10)}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success feedback
+                const originalText = exportBtn.innerHTML;
+                exportBtn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+                exportBtn.style.backgroundColor = '#06d6a0';
+                
+                setTimeout(() => {
+                    exportBtn.innerHTML = originalText;
+                    exportBtn.style.backgroundColor = '';
+                }, 2000);
+            }
+            
+            // Add animation to table rows on load
+            setTimeout(() => {
+                studentRows.forEach((row, index) => {
+                    row.style.animationDelay = `${index * 0.05}s`;
+                });
+            }, 100);
+            
+            // Highlight table rows on hover with a more pronounced effect
+            studentRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+<!-- templates/students/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Matric System</title>
+    <style>
+        /* Modern CSS with animations and effects */
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #6b7280;
+            --success: #10b981;
+            --success-dark: #0d9668;
+            --info: #3b82f6;
+            --info-dark: #2563eb;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f9fafb;
+            --dark: #1f2937;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Smooth scrolling and selection */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        *::selection {
+            background: rgba(79, 70, 229, 0.2);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        /* Header with animation */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Main content card */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 40px;
+            margin-bottom: 40px;
+            animation: slideUp 0.6s ease 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--success));
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Enhanced Statistics */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-box {
+            background: var(--light);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-box:hover::after {
+            transform: translateX(0);
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            line-height: 1;
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .stat-label {
+            color: var(--secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Enhanced Actions */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn:active::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .btn-add {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+        }
+        
+        .btn-add:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-single {
+            background: linear-gradient(135deg, var(--info), var(--info-dark));
+            color: white;
+        }
+        
+        .btn-single:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-double {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+        
+        .btn-double:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Enhanced Search */
+        .search-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .search-box {
+            display: inline-flex;
+            background: white;
+            border-radius: 12px;
+            padding: 5px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .search-input {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 350px;
+            outline: none;
+        }
+        
+        .search-btn {
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Enhanced Messages */
+        .messages-container {
+            margin: 20px 0;
+        }
+        
+        .message {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideInRight 0.5s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .message.success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+        
+        .message.error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #7f1d1d;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .message.info {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border-left: 4px solid var(--info);
+        }
+        
+        /* Enhanced Table */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+        
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        
+        th::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        th:last-child::after {
+            display: none;
+        }
+        
+        tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover {
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateX(5px);
+        }
+        
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Enhanced Badges */
+        .type-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .type-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .single-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #78350f;
+        }
+        
+        .double-badge {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            color: white;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secondary);
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .empty-state p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(79, 70, 229, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .search-input {
+                width: 250px;
+            }
+            
+            .main-card {
+                padding: 25px;
+            }
+            
+            .table-container {
+                margin: 0 -20px;
+                border-radius: 0;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 12px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .search-input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .search-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .btn, .search-container, .actions {
+                display: none !important;
+            }
+            
+            .main-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .main-card {
+                background: #1f2937;
+                color: #f9fafb;
+            }
+            
+            .stat-box {
+                background: #374151;
+                border-color: #4b5563;
+            }
+            
+            .stat-number {
+                color: #60a5fa;
+            }
+            
+            .stat-label {
+                color: #9ca3af;
+            }
+            
+            table {
+                background: #1f2937;
+            }
+            
+            thead {
+                background: #374151;
+            }
+            
+            td {
+                border-color: #374151;
+            }
+            
+            .search-box {
+                background: #374151;
+            }
+            
+            .search-input {
+                background: #1f2937;
+                color: #f9fafb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎓 Student Matric System</h1>
+            <p>Manage and track student matric numbers efficiently</p>
+        </div>
+        
+        <!-- Main Card -->
+        <div class="main-card">
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-box" id="totalStat">
+                    <div class="stat-number" id="totalCount">{{ total }}</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-box" id="singleStat">
+                    <div class="stat-number" id="singleCount">{{ single }}</div>
+                    <div class="stat-label">Single Matric</div>
+                </div>
+                <div class="stat-box" id="doubleStat">
+                    <div class="stat-number" id="doubleCount">{{ double }}</div>
+                    <div class="stat-label">Double Matric</div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{% url 'add_student' %}" class="btn btn-add">
+                    <span>➕</span>
+                    Add Matric Number
+                </a>
+                <a href="{% url 'single_matric' %}" class="btn btn-single">
+                    <span>📌</span>
+                    View Single Matric
+                </a>
+                <a href="{% url 'double_matric' %}" class="btn btn-double">
+                    <span>🔢</span>
+                    View Double Matric
+                </a>
+            </div>
+            
+            <!-- Search Form -->
+            <div class="search-container">
+                <form method="get" action="{% url 'search_student' %}" id="searchForm" class="search-box">
+                    <input type="text" 
+                           name="q" 
+                           class="search-input" 
+                           placeholder="Search by name or matric number..." 
+                           id="searchInput"
+                           value="{{ request.GET.q }}">
+                    <button type="submit" class="search-btn" id="searchBtn">
+                        <span>🔍</span>
+                        Search
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        <span>{% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% else %}ℹ️{% endif %}</span>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- All Students Table -->
+            <h2 style="margin-bottom: 20px; color: var(--dark);">All Students</h2>
+            
+            {% if students %}
+            <div class="table-container">
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Old Matric</th>
+                            <th>New Matric</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        {% for student in students %}
+                        <tr class="student-row" data-id="{{ student.id }}">
+                            <td class="row-number">{{ forloop.counter }}</td>
+                            <td class="student-name">{{ student.name }}</td>
+                            <td class="old-matric">
+                                <strong>{{ student.old_matric }}</strong>
+                            </td>
+                            <td class="new-matric">
+                                {% if student.new_matric %}
+                                    <span style="color: var(--success); font-weight: 600;">{{ student.new_matric }}</span>
+                                {% else %}
+                                    <span style="color: var(--secondary); font-style: italic;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if student.new_matric %}
+                                    <span class="type-badge double-badge" title="Has two matric numbers">DOUBLE</span>
+                                {% else %}
+                                    <span class="type-badge single-badge" title="Has one matric number">SINGLE</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination Controls -->
+            {% if students.has_other_pages %}
+            <div style="margin-top: 30px; text-align: center;">
+                <div class="pagination">
+                    {% if students.has_previous %}
+                        <a href="?page={{ students.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn" style="background: var(--light); color: var(--dark);">
+                            ← Previous
+                        </a>
+                    {% endif %}
+                    
+                    <span style="margin: 0 15px; color: var(--secondary);">
+                        Page {{ students.number }} of {{ students.paginator.num_pages }}
+                    </span>
+                    
+                    {% if students.has_next %}
+                        <a href="?page={{ students.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn" style="background: var(--light); color: var(--dark);">
+                            Next →
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div style="font-size: 4rem; margin-bottom: 20px;">📚</div>
+                <h3>No Students Found</h3>
+                <p>{% if request.GET.q %}No students match your search criteria.{% else %}Start by adding your first student.{% endif %}</p>
+                <a href="{% url 'add_student' %}" class="btn btn-add" style="width: auto;">
+                    <span>➕</span>
+                    Add First Student
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Enhanced JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate statistics on load
+            animateStatistics();
+            
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('.student-row');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    // Add visual feedback on click
+                    this.style.backgroundColor = 'rgba(79, 70, 229, 0.1)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                    }, 300);
+                });
+            });
+            
+            // Enhanced search functionality
+            const searchInput = document.getElementById('searchInput');
+            const searchForm = document.getElementById('searchForm');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            if (searchInput) {
+                // Auto-focus search input
+                searchInput.focus();
+                
+                // Debounced search (search as you type)
+                let searchTimeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        if (this.value.length >= 2) {
+                            searchForm.submit();
+                        }
+                    }, 500);
+                });
+                
+                // Add loading state to search button
+                searchForm.addEventListener('submit', function(e) {
+                    if (searchInput.value.trim()) {
+                        searchBtn.innerHTML = '<span class="loading"></span> Searching...';
+                        searchBtn.disabled = true;
+                    }
+                });
+            }
+            
+            // Copy matric number on click
+            const matricCells = document.querySelectorAll('.old-matric, .new-matric');
+            matricCells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const matric = this.querySelector('strong')?.textContent || 
+                                  this.querySelector('span')?.textContent;
+                    
+                    if (matric && matric !== '—') {
+                        copyToClipboard(matric);
+                        showNotification('Matric number copied!', 'success');
+                        
+                        // Visual feedback
+                        this.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+                        setTimeout(() => {
+                            this.style.backgroundColor = '';
+                        }, 500);
+                    }
+                });
+            });
+            
+            // Filter table by type
+            const filterButtons = document.querySelectorAll('.btn-single, .btn-double');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+            
+            // Update statistics with animation
+            function updateStatistics() {
+                const stats = {
+                    total: {{ total }},
+                    single: {{ single }},
+                    double: {{ double }}
+                };
+                
+                // Animate each counter
+                Object.keys(stats).forEach(stat => {
+                    const element = document.getElementById(stat + 'Count');
+                    if (element) {
+                        animateCounter(element, stats[stat]);
+                    }
+                });
+            }
+            
+            // Animate counter from 0 to target
+            function animateCounter(element, target) {
+                let current = 0;
+                const increment = target / 50; // Adjust speed
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current);
+                    }
+                }, 20);
+            }
+            
+            // Initial animation
+            function animateStatistics() {
+                const stats = document.querySelectorAll('.stat-box');
+                stats.forEach((stat, index) => {
+                    setTimeout(() => {
+                        stat.style.opacity = '0';
+                        stat.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            stat.style.transition = 'all 0.6s ease';
+                            stat.style.opacity = '1';
+                            stat.style.transform = 'translateY(0)';
+                        }, 100);
+                    }, index * 200);
+                });
+                
+                // Animate numbers
+                setTimeout(updateStatistics, 800);
+            }
+            
+            // Copy to clipboard function
+            function copyToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    console.log('Copied to clipboard:', text);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                });
+            }
+            
+            // Notification system
+            function showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `message ${type}`;
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '350px';
+                notification.style.animation = 'slideInRight 0.3s ease';
+                notification.innerHTML = `
+                    <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Add CSS for notification animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideOutRight {
+                    from {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translateX(30px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + F to focus search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                }
+                
+                // Escape to clear search
+                if (e.key === 'Escape' && searchInput) {
+                    if (searchInput.value) {
+                        searchInput.value = '';
+                        searchForm.submit();
+                    }
+                }
+                
+                // Ctrl/Cmd + N to add new student
+                if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                    e.preventDefault();
+                    window.location.href = "{% url 'add_student' %}";
+                }
+            });
+            
+            // Print functionality
+            const printBtn = document.createElement('button');
+            printBtn.innerHTML = '🖨️ Print';
+            printBtn.className = 'btn';
+            printBtn.style.cssText = 'background: var(--light); color: var(--dark); margin-left: 10px;';
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Add print button to actions
+            const actionsDiv = document.querySelector('.actions');
+            if (actionsDiv) {
+                actionsDiv.appendChild(printBtn);
+            }
+            
+            // Export to CSV functionality
+            const exportBtn = document.createElement('button');
+            exportBtn.innerHTML = '📥 Export CSV';
+            exportBtn.className = 'btn';
+            exportBtn.style.cssText = 'background: var(--light); color: var(--dark); margin-left: 10px;';
+            exportBtn.addEventListener('click', function() {
+                exportToCSV();
+            });
+            
+            if (actionsDiv) {
+                actionsDiv.appendChild(exportBtn);
+            }
+            
+            // Export table data to CSV
+            function exportToCSV() {
+                const rows = document.querySelectorAll('#studentsTable tbody tr');
+                let csv = 'Name,Old Matric,New Matric,Type\n';
+                
+                rows.forEach(row => {
+                    const name = row.querySelector('.student-name').textContent;
+                    const oldMatric = row.querySelector('.old-matric strong').textContent;
+                    const newMatric = row.querySelector('.new-matric span').textContent;
+                    const type = row.querySelector('.type-badge').textContent;
+                    
+                    csv += `"${name}","${oldMatric}","${newMatric}","${type}"\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'students_matric.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('CSV exported successfully!', 'success');
+            }
+            
+            // Auto-refresh statistics every 30 seconds
+            setInterval(() => {
+                fetch(window.location.href)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newTotal = doc.querySelector('#totalCount')?.textContent || {{ total }};
+                        const newSingle = doc.querySelector('#singleCount')?.textContent || {{ single }};
+                        const newDouble = doc.querySelector('#doubleCount')?.textContent || {{ double }};
+                        
+                        // Only update if changed
+                        if (newTotal != {{ total }} || newSingle != {{ single }} || newDouble != {{ double }}) {
+                            showNotification('Statistics updated!', 'info');
+                            animateCounter(document.getElementById('totalCount'), newTotal);
+                            animateCounter(document.getElementById('singleCount'), newSingle);
+                            animateCounter(document.getElementById('doubleCount'), newDouble);
+                        }
+                    })
+                    .catch(error => console.error('Error refreshing stats:', error));
+            }, 30000); // 30 seconds
+            
+            // Initialize tooltips
+            initializeTooltips();
+        });
+        
+        // Tooltip functionality
+        function initializeTooltips() {
+            const badges = document.querySelectorAll('.type-badge');
+            badges.forEach(badge => {
+                badge.addEventListener('mouseenter', function(e) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = this.getAttribute('title');
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.background = 'rgba(0, 0, 0, 0.8)';
+                    tooltip.style.color = 'white';
+                    tooltip.style.padding = '5px 10px';
+                    tooltip.style.borderRadius = '4px';
+                    tooltip.style.fontSize = '12px';
+                    tooltip.style.zIndex = '1000';
+                    tooltip.style.whiteSpace = 'nowrap';
+                    
+                    document.body.appendChild(tooltip);
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.left = rect.left + 'px';
+                    tooltip.style.top = (rect.top - 30) + 'px';
+                    
+                    this.tooltipElement = tooltip;
+                });
+                
+                badge.addEventListener('mouseleave', function() {
+                    if (this.tooltipElement && this.tooltipElement.parentNode) {
+                        this.tooltipElement.parentNode.removeChild(this.tooltipElement);
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
