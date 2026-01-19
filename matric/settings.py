@@ -34,7 +34,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['django-project-cfud.onrender.com']
+ALLOWED_HOSTS = ['matric-tracker-4.onrender.com']
  
 
 # Application definition
