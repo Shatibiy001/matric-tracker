@@ -34,8 +34,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = os.environ.get("DEBUG") == "True"
 
 
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = ["django-project-cfud.onrender.com"]
+ 
 
 # Application definition
 
