@@ -1,0 +1,848 @@
+<!-- templates/project/search_results.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Search Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 15px 35px rgba(67, 97, 238, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Search Container */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 60px 20px 25px;
+            font-size: 1.1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            background: white;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .search-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        /* Search Stats */
+        .search-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-count {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .count-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .results-count h3 {
+            color: var(--dark);
+            font-size: 1.3rem;
+        }
+
+        .search-query {
+            background: var(--light);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .search-query i {
+            color: var(--primary);
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* Student Card */
+        .student-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        .student-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(67, 97, 238, 0.2);
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .student-id {
+            background: var(--light);
+            color: var(--gray);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .student-email {
+            color: var(--gray);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .student-email i {
+            color: var(--primary);
+        }
+
+        /* Matric Info */
+        .matric-info {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .matric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .matric-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .matric-label {
+            color: var(--gray);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .matric-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .old-matric {
+            color: var(--danger);
+        }
+
+        .new-matric {
+            color: var(--success);
+        }
+
+        /* Validation Badge */
+        .validation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .valid {
+            background: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+        }
+
+        .invalid {
+            background: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
+        }
+
+        /* Student Meta */
+        .student-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .student-meta div {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f0f4ff, #e6ebff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .empty-state-icon i {
+            font-size: 50px;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: var(--gray);
+            max-width: 500px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .empty-state .search-tips {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            margin: 30px auto 0;
+            box-shadow: var(--card-shadow);
+            text-align: left;
+        }
+
+        .empty-state .search-tips h4 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .empty-state .search-tips ul {
+            list-style: none;
+        }
+
+        .empty-state .search-tips li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .empty-state .search-tips li:last-child {
+            border-bottom: none;
+        }
+
+        .empty-state .search-tips i {
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: white;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .nav-btn.new-search {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--light-gray);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-stats {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .navigation {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-input {
+                padding: 18px 50px 18px 20px;
+                font-size: 1rem;
+            }
+            
+            .student-card {
+                padding: 20px;
+            }
+            
+            .student-name {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Animation for cards */
+        .student-card {
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stagger animation delay */
+        .student-card:nth-child(1) { animation-delay: 0.1s; }
+        .student-card:nth-child(2) { animation-delay: 0.2s; }
+        .student-card:nth-child(3) { animation-delay: 0.3s; }
+        .student-card:nth-child(4) { animation-delay: 0.4s; }
+        .student-card:nth-child(5) { animation-delay: 0.5s; }
+        .student-card:nth-child(6) { animation-delay: 0.6s; }
+        .student-card:nth-child(n+7) { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔍 Student Search</h1>
+            <p>Find students by name, old matric number, or new matric number</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="search-container">
+            <form method="GET" action="{% url 'search_student' %}" class="search-box" id="searchForm">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ query }}" 
+                    placeholder="Enter student name, old matric (e.g., 2024...), or new matric (e.g., 2025...)" 
+                    class="search-input"
+                    autocomplete="off"
+                    autofocus
+                >
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Search Results -->
+        {% if query %}
+        <div class="search-stats animate__animated animate__fadeIn">
+            <div class="results-count">
+                <h3>Search Results:</h3>
+                <div class="count-badge">{{ students|length }} found</div>
+            </div>
+            <div class="search-query">
+                <i class="fas fa-search"></i>
+                Searching for: "{{ query }}"
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading" id="loadingSpinner">
+            <div class="loading-spinner"></div>
+            <p>Searching students...</p>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="results-grid" id="resultsGrid">
+            {% if has_results %}
+                {% for student in students %}
+                <div class="student-card">
+                    <div class="student-header">
+                        <div>
+                            <h3 class="student-name">{{ student.name }}</h3>
+                            {% if student.email %}
+                            <div class="student-email">
+                                <i class="fas fa-envelope"></i>
+                                {{ student.email }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="student-id">#{{ forloop.counter }}</div>
+                    </div>
+
+                    <!-- Matric Information -->
+                    <div class="matric-info">
+                        {% if student.old_matric %}
+                        <div class="matric-row">
+                            <div class="matric-label">
+                                <i class="fas fa-id-card" style="color: var(--danger);"></i>
+                                Old Matric
+                            </div>
+                            <div class="matric-value old-matric">{{ student.old_matric }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if student.new_matric %}
+                        <div class="matric-row">
+                            <div class="matric-label">
+                                <i class="fas fa-id-card" style="color: var(--success);"></i>
+                                New Matric
+                            </div>
+                            <div class="matric-value new-matric">{{ student.new_matric }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Validation Status -->
+                    
+                    <!-- Additional Information -->
+                    <div class="student-meta">
+                        <div>
+                            <i class="fas fa-calendar-plus"></i>
+                            Added: {{ student.created_at|date:"M d, Y" }}
+                        </div>
+                        <div>
+                            <i class="fas fa-user-graduate"></i>
+                            {% if student.old_matric and student.new_matric %}
+                            Double Matric
+                            {% elif student.old_matric %}
+                            Old Matric Only
+                            {% else %}
+                            New Matric Only
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state animate__animated animate__fadeIn">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <h3>No students found</h3>
+                    <p>We couldn't find any students matching "{{ query }}"</p>
+                    
+                    <div class="search-tips">
+                        <h4><i class="fas fa-lightbulb"></i> Search Tips:</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Try using partial names (e.g., "john" instead of "john doe")</li>
+                            <li><i class="fas fa-check"></i> Search by matric number (e.g., "2025" or "2019")</li>
+                            <li><i class="fas fa-check"></i> Check for spelling errors</li>
+                            <li><i class="fas fa-check"></i> Try fewer keywords for broader results</li>
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <!-- Initial State (No Search Yet) -->
+        <div class="empty-state animate__animated animate__fadeIn">
+            <div class="empty-state-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>Ready to Search</h3>
+            <p>Enter a student's name or matric number in the search box above to begin</p>
+            
+            <div class="search-tips">
+                <h4><i class="fas fa-info-circle"></i> What you can search for:</h4>
+                <ul>
+                    <li><i class="fas fa-user"></i> <strong>Full or partial names</strong> (e.g., "John", "Smith")</li>
+                    <li><i class="fas fa-id-card old-matric"></i> <strong>Old matric numbers</strong> starting with 2024</li>
+                    <li><i class="fas fa-id-card new-matric"></i> <strong>New matric numbers</strong> starting with 2025</li>
+                    
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="{% url 'home' %}" class="nav-btn">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            {% if query %}
+            <a href="{% url 'search_student' %}" class="nav-btn new-search">
+                <i class="fas fa-redo"></i> New Search
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Student Management System </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.querySelector('.search-input');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const resultsGrid = document.getElementById('resultsGrid');
+            
+            // Add focus to search input on page load
+            if (searchInput) {
+                searchInput.focus();
+                // Move cursor to end of text if there's a query
+                if (searchInput.value) {
+                    searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
+                }
+            }
+            
+            // Show loading spinner when searching
+            if (searchForm) {
+                searchForm.addEventListener('submit', function() {
+                    if (searchInput.value.trim()) {
+                        if (loadingSpinner) loadingSpinner.style.display = 'block';
+                        if (resultsGrid) resultsGrid.style.opacity = '0.5';
+                    }
+                });
+            }
+            
+            // Auto-submit after 500ms delay when typing (debounced search)
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                
+                // Only auto-search if query is long enough
+                if (this.value.trim().length >= 2) {
+                    searchTimeout = setTimeout(() => {
+                        searchForm.submit();
+                    }, 500);
+                }
+            });
+            
+            // Add enter key submission
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+            
+            // Add click animation to student cards
+            const studentCards = document.querySelectorAll('.student-card');
+            studentCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-10px)';
+                    }, 150);
+                });
+                
+                // Add keyboard navigation
+                card.setAttribute('tabindex', '0');
+                card.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        this.click();
+                    }
+                });
+            });
+            
+            // Highlight search terms in results
+            function highlightText() {
+                const query = "{{ query }}".toLowerCase();
+                if (!query) return;
+                
+                const elements = document.querySelectorAll('.student-name, .old-matric, .new-matric');
+                elements.forEach(element => {
+                    const text = element.textContent;
+                    const regex = new RegExp(`(${query})`, 'gi');
+                    const highlighted = text.replace(regex, '<mark class="highlight">$1</mark>');
+                    element.innerHTML = highlighted;
+                });
+            }
+            
+            // Add CSS for highlights
+            const style = document.createElement('style');
+            style.textContent = `
+                .highlight {
+                    background: linear-gradient(120deg, rgba(255, 215, 102, 0.3) 0%, rgba(255, 215, 102, 0.6) 100%);
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Run highlight function
+            highlightText();
+            
+            // Add animation to validation badges
+            const validationBadges = document.querySelectorAll('.validation-badge');
+            validationBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                badge.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Copy matric number on click
+            const matricValues = document.querySelectorAll('.matric-value');
+            matricValues.forEach(value => {
+                value.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const text = this.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        const originalText = this.textContent;
+                        this.textContent = 'Copied!';
+                        this.style.color = 'var(--primary)';
+                        
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                            this.style.color = '';
+                        }, 1500);
+                    });
+                });
+                
+                // Add tooltip
+                value.title = 'Click to copy';
+                value.style.cursor = 'pointer';
+            });
+        });
+    </script>
+</body>
+</html>
